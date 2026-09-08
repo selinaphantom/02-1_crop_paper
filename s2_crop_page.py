@@ -6,11 +6,12 @@ import json
 import shutil
 
 # ====== 自行設定變數 ======
-INPUT_FOLDER = r".\rotated_114C51516_1"
-OUTPUT_FOLDER = r"crop\crop_114C51516_1"
+INPUT_FOLDER = r"E:\碩士專案\EMBA\新用\圖片檔\黃彥凱\rotated_114C51501_1000"
+OUTPUT_FOLDER = r"crop\crop_114C51501_1000"
 JSON_PATH = r".\CP950\CP950-千字文.json"
 UNICODE_NUM = 1000           # 稿紙字數
 CROP_LENGTH = 260            # 數字越大字越小
+EXCLUDE_TOP_HEIGHT = 400
 MIN_BOX_SIZE = 180
 MIN_AREA_THRESHOLD = 10
 PADDING = 20
@@ -115,6 +116,8 @@ def crop_boxes(start_page, end_page):
         h_img, w_img = binary.shape
         qr_size = int(min(h_img, w_img) * 0.12)  # 假設QR碼大約佔圖片的12%
         binary[-qr_size:, -qr_size:] = 0  # 將右下角區域設為黑色
+
+        binary[:EXCLUDE_TOP_HEIGHT, :] = 0
         
         # 使用輪廓檢測方框
         contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
